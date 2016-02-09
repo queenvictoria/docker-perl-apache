@@ -36,8 +36,8 @@ RUN \
   sed -i 's/^error_log.*/error_log = \/dev\/stderr/' /etc/php-fpm.conf && \
   echo 'systemd_interval=0' >> /etc/php-fpm.conf
 
-RUN curl -L https://github.com/voltgrid/voltgrid-pie/archive/v1.0.2.tar.gz | tar -C /usr/local/bin --strip-components 1 -zxf - voltgrid-pie-1.0.2/voltgrid.py && \
-  curl -L https://github.com/just-containers/skaware/releases/download/v1.10.0/s6-2.1.3.0-linux-amd64-bin.tar.gz | tar -C / -zxf - && \
+RUN curl -L https://github.com/voltgrid/voltgrid-pie/archive/v1.0.3.tar.gz | tar -C /usr/local/bin --strip-components 1 -zxf - voltgrid-pie-1.0.3/voltgrid.py && \
+  curl -L https://github.com/just-containers/skaware/releases/download/v1.16.1/s6-2.2.2.0-linux-amd64-bin.tar.gz | tar -C / -zxf - && \
   pear install HTTP_Request2
 
 COPY conf.modules.d /etc/httpd/conf.modules.d
