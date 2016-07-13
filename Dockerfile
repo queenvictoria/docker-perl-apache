@@ -35,7 +35,7 @@ RUN \
   wget -O- https://sektioneins.de/files/repository.asc | apt-key add - && \
   apt-get update && \
   apt-get install --no-install-recommends --no-install-suggests -y php5-suhosin-extension && \
-  apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+  apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/www/html/*
 
 RUN \
   mkdir /root/.ssh && \
