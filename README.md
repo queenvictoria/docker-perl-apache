@@ -51,7 +51,7 @@ phpopts_memory_limit = 128M
 
 # PHP Cache options
 php_cache = (opcache|none) default is opcache, none doesn't load any cache extensions.
-php_apc_shm_size = 64M # This is for the apc extension
+php_apc_shm_size = 64M # This is for the apcu extension
 php_opcache_memory_consumption = 128
 php_opcache_revalidate_freq = 2
 
