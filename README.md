@@ -1,7 +1,7 @@
 ## PHP-Apache Debian 8 (Jessie)
 
-This is an apache and php-fpm image
-Base: Debain 8 (Jessie)
+This is an Apache and php-fpm image
+Base: Debian 8 (Jessie)
 Apache httpd: 2.4
 PHP: 5.6
 
@@ -13,8 +13,8 @@ offloading to the load balancer and how this affects .htaccess rules.
 
 ## Options:
 
-All options are optional the values shown here are the defaults that have been
-set. The options listed here are also case sensitive.
+All options are optional.
+The values shown here are the defaults. The options listed here are also case sensitive.
 
 ### Global
 
@@ -45,13 +45,13 @@ phpopts_ = (unset)
 
 # phpopts Examples
 phpopts_short_open_tag = off
-phpopts_post_max_size = 32M
-phpopts_upload_max_filezie = 32M
-phpopts_memory_limit = 200M
+phpopts_post_max_size = 8M
+phpopts_upload_max_filesize = 2M
+phpopts_memory_limit = 128M
 
 # PHP Cache options
 php_cache = (opcache|none) default is opcache, none doesn't load any cache extensions.
-php_apc_shm_size = 64M # This is for the apcu extension
+php_apc_shm_size = 64M # This is for the apc extension
 php_opcache_memory_consumption = 128
 php_opcache_revalidate_freq = 2
 
