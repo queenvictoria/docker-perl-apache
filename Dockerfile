@@ -30,7 +30,7 @@ RUN \
 
 RUN \
   apt-get update && \
-  apt-get install --no-install-recommends --no-install-suggests -y wget curl ca-certificates git msmtp-mta python-jinja2 apache2 apache2-mpm-event libapache2-mod-xsendfile imagemagick ghostscript php5-fpm php5-cli php5-apcu php5-gd php5-imap php5-intl php5-ldap php5-mcrypt php5-mysql php5-pgsql php5-sqlite php5-redis php5-igbinary php5-imagick php5-pspell php5-recode php5-xmlrpc php5-memcached php-http-request2 && \
+  apt-get install --no-install-recommends --no-install-suggests -y wget curl ca-certificates git msmtp-mta python-jinja2 apache2 apache2-mpm-event libapache2-mod-xsendfile imagemagick ghostscript php5-fpm php5-cli php5-curl php5-apcu php5-gd php5-imap php5-intl php5-ldap php5-mcrypt php5-mysql php5-pgsql php5-sqlite php5-redis php5-igbinary php5-imagick php5-pspell php5-recode php5-xmlrpc php5-memcached php-http-request2 && \
   echo 'deb http://repo.suhosin.org/ debian-jessie main' >> /etc/apt/sources.list && \
   wget -O- https://sektioneins.de/files/repository.asc | apt-key add - && \
   apt-get update && \
