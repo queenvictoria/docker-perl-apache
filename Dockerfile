@@ -61,4 +61,4 @@ RUN \
   a2dissite 000-default && \
   a2disconf security && \
   a2enconf php5-fpm && \
-  a2enmod proxy_fcgi remoteip rewrite
+  a2enmod proxy_fcgi remoteip rewrite headers
