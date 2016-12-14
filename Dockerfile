@@ -30,12 +30,20 @@ RUN \
 
 RUN \
   apt-get update && \
-  apt-get install --no-install-recommends --no-install-suggests -y wget curl ca-certificates git msmtp-mta python-jinja2 apache2 apache2-mpm-event libapache2-mod-xsendfile imagemagick ghostscript php5-fpm php5-cli php5-curl php5-apcu php5-gd php5-imap php5-intl php5-ldap php5-mcrypt php5-mysql php5-pgsql php5-sqlite php5-redis php5-igbinary php5-imagick php5-pspell php5-recode php5-xmlrpc php5-memcached php-http-request2 php5-mongo && \
+  apt-get install --no-install-recommends --no-install-suggests -y wget curl ca-certificates git msmtp-mta python-jinja2 apache2 apache2-mpm-event libapache2-mod-xsendfile imagemagick ghostscript php5-fpm php5-cli php5-curl php5-apcu php5-gd php5-imap php5-intl php5-ldap php5-mcrypt php5-mysql php5-pgsql php5-sqlite php5-redis php5-igbinary php5-imagick php5-pspell php5-recode php5-xmlrpc php5-memcached php-http-request2 && \
   echo 'deb http://repo.suhosin.org/ debian-jessie main' >> /etc/apt/sources.list && \
   wget -O- https://sektioneins.de/files/repository.asc | apt-key add - && \
   apt-get update && \
   apt-get install --no-install-recommends --no-install-suggests -y php5-suhosin-extension && \
   apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/www/html/*
+
+# Install php mongo extension
+RUN \
+  apt-get update && \
+  apt-get install --no-install-recommends --no-install-suggests -y php5-dev re2c make && \
+  pecl install mongo && \
+  echo "extension = mongo.so" > /etc/php5/mods-available/mongo.ini && \
+  apt-get --purge autoremove -y php5-dev re2c make && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN \
   mkdir /root/.ssh && \
@@ -57,7 +65,7 @@ COPY s6 /etc/s6/
 #COPY php-extras /usr/share/php/
 
 RUN \
-  php5enmod suhosin session && \
+  php5enmod suhosin session mongo && \
   a2dissite 000-default && \
   a2disconf security && \
   a2enconf php5-fpm && \
