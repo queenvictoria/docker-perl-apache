@@ -47,7 +47,7 @@ RUN \
 
 RUN \
   mkdir /root/.ssh && \
-  echo -e "Host *\n\tStrictHostKeyChecking no\n" >> /root/.ssh/config && \
+  echo "Host *\n\tStrictHostKeyChecking no\n" >> /root/.ssh/config && \
   sed -i -e '/^session.save_/ s/^/;/' /etc/php5/*/php.ini && \
   touch /var/log/msmtp.log && \
   chown www-data:www-data /var/log/msmtp.log && \
