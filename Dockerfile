@@ -62,7 +62,7 @@ COPY msmtprc /etc/msmtprc
 COPY php-fpm.conf /etc/php5/fpm/pool.d/www.conf
 COPY voltgrid.conf /usr/local/etc/voltgrid.conf
 COPY s6 /etc/s6/
-#COPY php-extras /usr/share/php/
+COPY php-extras /usr/share/php/
 
 RUN \
   php5enmod suhosin session mongo && \
