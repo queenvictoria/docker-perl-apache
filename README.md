@@ -1,9 +1,10 @@
-## PHP-Apache Debian 8 (Jessie)
+# PHP-Apache Debian 8 (Jessie)
 
-This is an Apache and php-fpm image
-Base: Debian 8 (Jessie)
-Apache httpd: 2.4
-PHP: 5.6
+This is an Apache and php-fpm image:
+
+- Base: Debian 8 (Jessie)
+- Apache httpd: 2.4
+- PHP: 5.6
 
 This image is designed to be quite configurable and as such is good for getting
 started but probably not a great base if you want a highly optimised container.
@@ -71,10 +72,22 @@ phpfpm_pm_max_children = 3
 phpfpm_pm_max_requests = 500
 ```
 
+## Suhosin
+
+This container also provides support for [Suhosin](https://suhosin.org/)
+PHP security extensions.
+
+NB. When defining suhosin parameters replace all periods ('.') with double
+underscores ('__'). (This is due issues with defining environment variables
+that contain periods).
+
+eg. `phpopts_suhosin.get.max_value_length=2048` should be defined as
+`phpopts_suhosin__get__max_value_length=2048`
+
 ### Email/msmtp
 
 msmtp expects a from address to be set either via environment variable (`msmtp_from`) or
-in the php mail() function. eg. `mail('nobody@example.com', 'the subject', 
+in the php mail() function. eg. `mail('nobody@example.com', 'the subject',
 'the message', null, '-fwebmaster@example.com');`
 
 msmtp also need a host to send email via, it does not queue and forward mail
@@ -114,7 +127,7 @@ Some PHP application also check they are running on an SSL connection. As the
 local webserver doesn't set $_SERVER['HTTPS'] correctly when behind a proxy the
 following code can be used to fix the issue.
 
-```
+```php
 /* Set _SERVER['HTTPS'] correctly when behind a proxy setting HTTP_X_FORWARDED_PROTO */
 if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
     $_SERVER['HTTPS'] = 'on';
