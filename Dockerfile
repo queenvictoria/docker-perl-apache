@@ -9,19 +9,8 @@ FROM debian:8
 MAINTAINER Tim Robinson <tim@panubo.com>
 
 ENV TMPDIR /var/tmp
-ENV VOLTGRID_PIE=1.0.5
-
-EXPOSE 8000
-
-RUN \
-  apt-get update && \
-  apt-get install --no-install-recommends --no-install-suggests -y wget ca-certificates && \
-  wget -O- https://github.com/voltgrid/voltgrid-pie/archive/v${VOLTGRID_PIE}.tar.gz | tar -C /usr/local/bin --strip-components 1 -zxf - voltgrid-pie-${VOLTGRID_PIE}/voltgrid.py && \
-  echo '{"user":{"uid":0,"gid":0}}' > /usr/local/etc/voltgrid.conf && \
-  wget -O- https://github.com/just-containers/skaware/releases/download/v1.18.1/s6-2.3.0.0-linux-amd64-bin.tar.gz | tar -C / -zxf - && \
-  apt-get --purge autoremove -y wget && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-ENTRYPOINT ["/usr/local/bin/voltgrid.py"]
-CMD ["/bin/s6-svscan","/etc/s6"]
+ENV S6_RELEASE=1.19.1 S6_VERSION=2.4.0.0 S6_SHA1=c3caccc531029c4993b3b66027559b15d5a10874
+ENV VOLTGRID_PIE=1.0.6 VOLTGRID_PIE_SHA1=11572a8ea15fb31cddeaa7e1438db61420556587
 
 # Change the www-data use to uid and gid 48 to match other containers
 RUN \
@@ -56,6 +45,22 @@ RUN \
   sed -i -E 's/^;?systemd_interval.*/systemd_interval = 0/' /etc/php5/fpm/php-fpm.conf && \
   mv /etc/php5/fpm/pool.d/www.conf /etc/php5/fpm/pool.d/www.conf_orig
 
+ # Add Volt Grid .py / .conf
+ RUN DIR=$(mktemp -d) && cd ${DIR} && \
+    curl -s -L https://github.com/voltgrid/voltgrid-pie/archive/v${VOLTGRID_PIE}.tar.gz -o voltgrid-pie.tar.gz && \
+    sha1sum voltgrid-pie.tar.gz && \
+    echo "${VOLTGRID_PIE_SHA1} voltgrid-pie.tar.gz" | sha1sum -c - && \
+    tar -C /usr/local/bin --strip-components 1 -zxf voltgrid-pie.tar.gz voltgrid-pie-${VOLTGRID_PIE}/voltgrid.py && \
+    rm -rf ${DIR} && \
+    echo '{"user":{"uid":0,"gid":0}}' > /usr/local/etc/voltgrid.conf
+
+ # Install s6
+ RUN DIR=$(mktemp -d) && cd ${DIR} && \
+     curl -s -L https://github.com/just-containers/skaware/releases/download/v${S6_RELEASE}/s6-${S6_VERSION}-linux-amd64-bin.tar.gz -o s6.tar.gz && \
+     echo "${S6_SHA1} s6.tar.gz" | sha1sum -c - && \
+     tar -xzf s6.tar.gz -C / && \
+     rm -rf ${DIR}
+
 COPY apache2.conf /etc/apache2/conf-available/php5-fpm.conf
 COPY php.d /etc/php5/mods-available
 COPY msmtprc /etc/msmtprc
@@ -70,3 +75,7 @@ RUN \
   a2disconf security && \
   a2enconf php5-fpm && \
   a2enmod proxy_fcgi remoteip rewrite headers
+
+EXPOSE 8000
+ENTRYPOINT ["/usr/local/bin/voltgrid.py"]
+CMD ["/bin/s6-svscan", "/etc/s6"]
