@@ -76,6 +76,7 @@ RUN \
   a2enconf php5-fpm && \
   a2enmod proxy_fcgi remoteip rewrite headers
 
+WORKDIR /var/www/html
 EXPOSE 8000
 ENTRYPOINT ["/usr/local/bin/voltgrid.py"]
 CMD ["/bin/s6-svscan", "/etc/s6"]
