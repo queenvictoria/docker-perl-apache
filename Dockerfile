@@ -9,7 +9,7 @@ FROM debian:8
 MAINTAINER Tim Robinson <tim@panubo.com>
 
 ENV TMPDIR /var/tmp
-ENV S6_RELEASE=1.19.1 S6_VERSION=2.4.0.0 S6_SHA1=c3caccc531029c4993b3b66027559b15d5a10874
+ENV S6_RELEASE=1.20.0 S6_VERSION=2.5.1.0 S6_SHA1=b798972cbf46e28f1c5d238f6703aba6edded57e
 ENV VOLTGRID_PIE=1.0.6 VOLTGRID_PIE_SHA1=11572a8ea15fb31cddeaa7e1438db61420556587
 
 # Change the www-data use to uid and gid 48 to match other containers
