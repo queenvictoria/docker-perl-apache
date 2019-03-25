@@ -1,10 +1,8 @@
-# Panubo PHP-Apache
+# Panubo Perl-Apache
 #
 # Debian 8
-# PHP 5.6
+# Perl
 # Apache 2.4
-# Suhosin
-# Mongo support
 #
 
 FROM debian:8
@@ -21,20 +19,8 @@ RUN \
 # Install main packages
 RUN \
   apt-get update && \
-  apt-get install --no-install-recommends --no-install-suggests -y wget curl ca-certificates git openssh-client msmtp-mta python-jinja2 apache2 apache2-mpm-event libapache2-mod-xsendfile imagemagick ghostscript php5-fpm php5-cli php5-curl php5-apcu php5-gd php5-imap php5-intl php5-ldap php5-mcrypt php5-mysql php5-pgsql php5-sqlite php5-redis php5-igbinary php5-imagick php5-pspell php5-recode php5-xmlrpc php5-memcached php-http-request2 && \
-  echo 'deb http://repo.suhosin.org/ debian-jessie main' >> /etc/apt/sources.list && \
-  wget -O- https://sektioneins.de/files/repository.asc | apt-key add - && \
-  apt-get update && \
-  apt-get install --no-install-recommends --no-install-suggests -y php5-suhosin-extension && \
+  apt-get install --no-install-recommends --no-install-suggests -y wget curl ca-certificates git openssh-client msmtp-mta python-jinja2 apache2 apache2-mpm-event libapache2-mod-xsendfile imagemagick ghostscript libapache2-mod-perl && \
   apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/www/html/*
-
-# Install php mongo extension
-RUN \
-  apt-get update && \
-  apt-get install --no-install-recommends --no-install-suggests -y php5-dev re2c make pkg-config && \
-  pecl install mongo && \
-  echo "; priority=99\nextension = mongo.so" > /etc/php5/mods-available/mongo.ini && \
-  apt-get --purge autoremove -y php5-dev re2c make pkg-config && apt-get clean && rm -rf /var/lib/apt/lists/* && rm -rf /tmp/*
 
 # Add Volt Grid .py / .conf
 RUN DIR=$(mktemp -d) && cd ${DIR} && \
@@ -65,20 +51,12 @@ RUN \
   mv /etc/php5/fpm/pool.d/www.conf /etc/php5/fpm/pool.d/www.conf_orig
 
 COPY apache2.conf /etc/apache2/conf-available/php5-fpm.conf
-COPY php.d /etc/php5/mods-available
 COPY msmtprc /etc/msmtprc
 COPY php-fpm.conf /etc/php5/fpm/pool.d/www.conf
 COPY voltgrid.conf /usr/local/etc/voltgrid.conf
 COPY s6 /etc/s6/
 
-# Install PHP Extras
-RUN cd /tmp \
-  && wget https://github.com/panubo/php-extras/archive/master.tar.gz \
-  && tar --wildcards -C /usr/share/php/ -xvf master.tar.gz --strip 1 '*.php'  \
-  && rm -f /tmp/master.tar.gz
-
 RUN \
-  php5enmod suhosin session mongo && \
   a2dissite 000-default && \
   a2disconf security other-vhosts-access-log && \
   a2enconf php5-fpm && \
